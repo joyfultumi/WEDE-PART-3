@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Security: only allow files from this site and the trusted map library -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- SEO: unique title and description for this page -->
+    <title>Our Products | Cakes, Cupcakes, Muffins &amp; Scones - Joyful Delights Bakery</title>
+    <meta name="description" content="Browse and search Joyful Delights Bakery's cakes, cupcakes, muffins, scones and treats with prices. Filter by category and view photos of each product.">
+    <meta name="keywords" content="bakery products, red velvet cake, bento cake, cupcakes, blueberry muffins, scones, coconut snowballs, cake prices">
+    <meta name="author" content="Joyful Delights Bakery">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://YOUR-USERNAME.github.io/joyful-delights-bakery/products.html">
+
+    <!-- Social media preview (Open Graph) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Our Products | Joyful Delights Bakery">
+    <meta property="og:description" content="Cakes, cupcakes, muffins, scones and treats with prices.">
+    <meta property="og:url" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/products.html">
+    <meta property="og:image" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/images/red-velvet-cake.jpeg">
+    <meta property="og:locale" content="en_ZA">
+
+    <link rel="icon" href="images/thumbs/logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a class="visually-hidden" href="#main-content">Skip to main content</a>
+
+    <!-- Site header with logo and navigation menu -->
+    <header>
+        <a class="brand" href="index.html">
+            <img src="images/thumbs/logo.jpeg" alt="Joyful Delights Bakery logo" width="64" height="64">
+            <span>Joyful Delights Bakery</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">☰</button>
+        <nav id="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="enquiry.html">Enquiry</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <h1>Our Products</h1>
+        <p>Everything below is baked fresh. Search, filter by category or sort by price, then click a photo to see it larger. Want to order? <a href="enquiry.html">Get an instant quote</a>.</p>
+
+        <!-- Search, filter and sort controls -->
+        <section class="product-tools" aria-label="Search and filter products">
+            <div>
+                <label for="search">Search products</label>
+                <input type="search" id="search" placeholder="e.g. muffin, cake, scone" autocomplete="off">
+            </div>
+            <div>
+                <label for="category">Category</label>
+                <select id="category">
+                    <option value="all">All categories</option>
+                </select>
+            </div>
+            <div>
+                <label for="sort">Sort by</label>
+                <select id="sort">
+                    <option value="name-az">Name (A&ndash;Z)</option>
+                    <option value="name-za">Name (Z&ndash;A)</option>
+                    <option value="price-low">Price (low to high)</option>
+                    <option value="price-high">Price (high to low)</option>
+                </select>
+            </div>
+        </section>
+
+        <p id="results-count" aria-live="polite"></p>
+
+        <!-- Product cards are loaded here by products.js -->
+        <section id="product-grid" class="product-grid" aria-label="Product list"></section>
+
+        <noscript>
+            <p>Please turn on JavaScript to see our full product list, or <a href="contact.html">contact us</a> for a price list.</p>
+        </noscript>
+    </main>
+
+    <!-- Lightbox (modal) for viewing a larger product photo -->
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Product image viewer" aria-hidden="true">
+        <button type="button" class="close" aria-label="Close image viewer">&times;</button>
+        <button type="button" class="prev" aria-label="Previous image">&#8249;</button>
+        <img id="lightbox-image" src="images/thumbs/logo.jpeg" alt="">
+        <p id="lightbox-caption"></p>
+        <button type="button" class="next" aria-label="Next image">&#8250;</button>
+    </div>
+
+    <!-- Footer with internal links, contact details and social media -->
+    <footer>
+        <ul>
+            <li><a href="products.html">Our Products</a></li>
+            <li><a href="enquiry.html">Order Enquiry</a></li>
+            <li><a href="contact.html">Find Us</a></li>
+        </ul>
+        <p>21701 Badger Street, Nietgedacht, 1739 &middot; <a href="tel:+27762585159">076 258 5159</a></p>
+        <!-- Replace these links with the bakery's real social media pages -->
+        <ul>
+            <li><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+        </ul>
+        <p>&copy; <span id="year">2026</span> Joyful Delights Bakery. All rights reserved.</p>
+    </footer>
+
+    <script src="js/products-data.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/products.js" defer></script>
+</body>
+</html>

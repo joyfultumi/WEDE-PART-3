@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Security: only allow files from this site and the trusted map library -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- SEO: unique title and description for this page -->
+    <title>Joyful Delights Bakery | Fresh Cakes, Muffins &amp; Scones in Nietgedacht</title>
+    <meta name="description" content="Joyful Delights Bakery bakes fresh cakes, cupcakes, muffins and scones daily in Nietgedacht, Gauteng. Order custom birthday and celebration cakes online.">
+    <meta name="keywords" content="bakery Nietgedacht, fresh bread, custom cakes, birthday cakes, cupcakes, muffins, scones, Gauteng bakery">
+    <meta name="author" content="Joyful Delights Bakery">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://YOUR-USERNAME.github.io/joyful-delights-bakery/">
+
+    <!-- Social media preview (Open Graph) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Joyful Delights Bakery | Fresh Cakes, Muffins &amp; Scones in Nietgedacht">
+    <meta property="og:description" content="Fresh cakes, cupcakes, muffins and scones baked daily in Nietgedacht, Gauteng.">
+    <meta property="og:url" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/">
+    <meta property="og:image" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/images/logo.jpeg">
+    <meta property="og:locale" content="en_ZA">
+
+    <link rel="icon" href="images/thumbs/logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Local SEO: structured data that tells Google this is a bakery -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Bakery",
+        "name": "Joyful Delights Bakery",
+        "image": "https://YOUR-USERNAME.github.io/joyful-delights-bakery/images/logo.jpeg",
+        "url": "https://YOUR-USERNAME.github.io/joyful-delights-bakery/",
+        "telephone": "+27762585159",
+        "email": "info@joyfuldelightsbakery.com",
+        "foundingDate": "2015",
+        "priceRange": "R10 - R350",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "21701 Badger Street",
+            "addressLocality": "Nietgedacht",
+            "postalCode": "1739",
+            "addressRegion": "Gauteng",
+            "addressCountry": "ZA"
+        },
+        "openingHours": ["Mo-Fr 07:00-18:00", "Sa 08:00-14:00"]
+    }
+    </script>
+</head>
+<body>
+    <a class="visually-hidden" href="#main-content">Skip to main content</a>
+
+    <!-- Site header with logo and navigation menu -->
+    <header>
+        <a class="brand" href="index.html">
+            <img src="images/thumbs/logo.jpeg" alt="Joyful Delights Bakery logo" width="64" height="64">
+            <span>Joyful Delights Bakery</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">☰</button>
+        <nav id="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="enquiry.html">Enquiry</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero section with welcome message -->
+        <section class="hero">
+            <img src="images/thumbs/logo.jpeg" alt="Joyful Delights Bakery logo with cakes, muffins and scones" width="240" height="240">
+            <h1>Fresh, Delicious Baked Goods Every Day</h1>
+            <p>Welcome to Joyful Delights Bakery in Nietgedacht, where we bring joy through quality cakes, muffins and scones made with love since 2015.</p>
+
+            <!-- Call-to-action buttons -->
+            <div class="call-to-action">
+                <a class="button" href="products.html">Explore Our Products</a>
+                <a class="button secondary" href="enquiry.html">Get a Quote</a>
+            </div>
+        </section>
+
+        <!-- Featured products are added here by main.js from products-data.js -->
+        <section class="reveal" aria-labelledby="featured-heading">
+            <h2 id="featured-heading">Customer Favourites</h2>
+            <div id="featured-products" class="product-grid"></div>
+            <p><a href="products.html">See all our cakes, muffins and treats &rarr;</a></p>
+        </section>
+
+        <section class="reveal" aria-labelledby="why-heading">
+            <h2 id="why-heading">Why Choose Our Bakery?</h2>
+            <h3>Baked Fresh Every Morning</h3>
+            <p>Everything is baked on the day you buy it, using natural ingredients and no shortcuts.</p>
+            <h3>Custom Celebration Cakes</h3>
+            <p>Birthdays, Mother's Day, weddings and corporate events &ndash; <a href="enquiry.html">tell us what you need</a> and get an instant estimate.</p>
+            <h3>Local and Friendly</h3>
+            <p>We are a family bakery serving Nietgedacht, Lanseria and the surrounding areas. <a href="about.html">Read our story</a>.</p>
+        </section>
+
+        <section class="reveal" aria-labelledby="hours-heading">
+            <h2 id="hours-heading">Opening Hours</h2>
+            <table>
+                <tr><th scope="row">Monday &ndash; Friday</th><td>07:00 &ndash; 18:00</td></tr>
+                <tr><th scope="row">Saturday</th><td>08:00 &ndash; 14:00</td></tr>
+                <tr><th scope="row">Sunday &amp; public holidays</th><td>Closed</td></tr>
+            </table>
+        </section>
+    </main>
+
+    <!-- Footer with internal links, contact details and social media -->
+    <footer>
+        <ul>
+            <li><a href="products.html">Our Products</a></li>
+            <li><a href="enquiry.html">Order Enquiry</a></li>
+            <li><a href="contact.html">Find Us</a></li>
+        </ul>
+        <p>21701 Badger Street, Nietgedacht, 1739 &middot; <a href="tel:+27762585159">076 258 5159</a></p>
+        <!-- Replace these links with the bakery's real social media pages -->
+        <ul>
+            <li><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+        </ul>
+        <p>&copy; <span id="year">2026</span> Joyful Delights Bakery. All rights reserved.</p>
+    </footer>
+
+    <script src="js/products-data.js" defer></script>
+    <script src="js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Security: only allow files from this site and the trusted map library -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- SEO: unique title and description for this page -->
+    <title>About Us | Joyful Delights Bakery - Family Bakery Since 2015</title>
+    <meta name="description" content="Learn the story, mission and vision of Joyful Delights Bakery, a family bakery in Nietgedacht baking fresh, natural treats since 2015. Read our FAQs.">
+    <meta name="keywords" content="about Joyful Delights Bakery, family bakery, Nietgedacht bakery history, bakery FAQ">
+    <meta name="author" content="Joyful Delights Bakery">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://YOUR-USERNAME.github.io/joyful-delights-bakery/about.html">
+
+    <!-- Social media preview (Open Graph) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="About Us | Joyful Delights Bakery">
+    <meta property="og:description" content="The story, mission and vision of Joyful Delights Bakery, baking fresh treats since 2015.">
+    <meta property="og:url" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/about.html">
+    <meta property="og:image" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/images/logo.jpeg">
+    <meta property="og:locale" content="en_ZA">
+
+    <link rel="icon" href="images/thumbs/logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a class="visually-hidden" href="#main-content">Skip to main content</a>
+
+    <!-- Site header with logo and navigation menu -->
+    <header>
+        <a class="brand" href="index.html">
+            <img src="images/thumbs/logo.jpeg" alt="Joyful Delights Bakery logo" width="64" height="64">
+            <span>Joyful Delights Bakery</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">☰</button>
+        <nav id="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="enquiry.html">Enquiry</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <h1>About Joyful Delights Bakery</h1>
+
+        <!-- Tabs: Our Story / Mission / Vision -->
+        <section class="tabs" aria-labelledby="who-heading">
+            <h2 id="who-heading">Who We Are</h2>
+            <div class="tab-list" role="tablist" aria-label="About the bakery">
+                <button type="button" role="tab" id="tab-story" aria-controls="panel-story" aria-selected="true">Our Story</button>
+                <button type="button" role="tab" id="tab-mission" aria-controls="panel-mission" aria-selected="false" tabindex="-1">Mission</button>
+                <button type="button" role="tab" id="tab-vision" aria-controls="panel-vision" aria-selected="false" tabindex="-1">Vision</button>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="panel-story" aria-labelledby="tab-story">
+                <p>Founded in 2015, Joyful Delights Bakery is dedicated to creating fresh, natural baked goods that bring happiness to our community.</p>
+                <p>What started as a home kitchen baking birthday cakes for friends has grown into a local bakery known for its cakes, muffins, scones and celebration orders.</p>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="panel-mission" aria-labelledby="tab-mission" hidden>
+                <p>To provide delicious and wholesome baked treats that bring joy to our customers.</p>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="panel-vision" aria-labelledby="tab-vision" hidden>
+                <p>To expand our reach through an easy-to-use online platform that connects us with more customers.</p>
+            </div>
+        </section>
+
+        <!-- Accordion: frequently asked questions -->
+        <section class="reveal" aria-labelledby="faq-heading">
+            <h2 id="faq-heading">Frequently Asked Questions</h2>
+
+            <div class="accordion-item">
+                <h3><button type="button" aria-expanded="false" aria-controls="faq-1">How far in advance should I order a custom cake?</button></h3>
+                <div class="accordion-panel" id="faq-1">
+                    <p>We need at least 2 days' notice. For large or wedding orders please give us one week. Use our <a href="enquiry.html">enquiry form</a> to get an estimate.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3><button type="button" aria-expanded="false" aria-controls="faq-2">Do you offer bulk discounts?</button></h3>
+                <div class="accordion-panel" id="faq-2">
+                    <p>Yes. Orders of 24 items or more get 10% off &ndash; ideal for schools, offices and parties.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3><button type="button" aria-expanded="false" aria-controls="faq-3">Do you deliver?</button></h3>
+                <div class="accordion-panel" id="faq-3">
+                    <p>We deliver free within 10 km of the bakery. See the delivery area on our <a href="contact.html">contact page map</a>.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h3><button type="button" aria-expanded="false" aria-controls="faq-4">Can you cater for allergies?</button></h3>
+                <div class="accordion-panel" id="faq-4">
+                    <p>Please mention any allergies in your enquiry. Our kitchen handles nuts, wheat, eggs and dairy, so we cannot guarantee allergen-free products.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer with internal links, contact details and social media -->
+    <footer>
+        <ul>
+            <li><a href="products.html">Our Products</a></li>
+            <li><a href="enquiry.html">Order Enquiry</a></li>
+            <li><a href="contact.html">Find Us</a></li>
+        </ul>
+        <p>21701 Badger Street, Nietgedacht, 1739 &middot; <a href="tel:+27762585159">076 258 5159</a></p>
+        <!-- Replace these links with the bakery's real social media pages -->
+        <ul>
+            <li><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+        </ul>
+        <p>&copy; <span id="year">2026</span> Joyful Delights Bakery. All rights reserved.</p>
+    </footer>
+
+    <script src="js/main.js" defer></script>
+</body>
+</html>

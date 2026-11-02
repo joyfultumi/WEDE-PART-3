@@ -1,0 +1,5 @@
+# robots.txt - tells search engine crawlers which pages they may index
+User-agent: *
+Allow: /
+
+Sitemap: https://YOUR-USERNAME.github.io/joyful-delights-bakery/sitemap.xml

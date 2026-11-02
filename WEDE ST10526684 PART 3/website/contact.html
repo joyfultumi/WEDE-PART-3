@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Security: only allow files from this site and the trusted map library -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- SEO: unique title and description for this page -->
+    <title>Contact Us | Joyful Delights Bakery, Nietgedacht</title>
+    <meta name="description" content="Contact Joyful Delights Bakery in Nietgedacht, Gauteng. Find our address, phone number, opening hours and map, or send us a message online.">
+    <meta name="keywords" content="contact bakery, bakery near me, Nietgedacht bakery address, bakery phone number, bakery directions">
+    <meta name="author" content="Joyful Delights Bakery">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://YOUR-USERNAME.github.io/joyful-delights-bakery/contact.html">
+
+    <!-- Social media preview (Open Graph) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Contact Us | Joyful Delights Bakery">
+    <meta property="og:description" content="Address, phone, map and contact form for Joyful Delights Bakery.">
+    <meta property="og:url" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/contact.html">
+    <meta property="og:image" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/images/logo.jpeg">
+    <meta property="og:locale" content="en_ZA">
+
+    <link rel="icon" href="images/thumbs/logo.jpeg" type="image/jpeg">
+
+    <!-- Leaflet map library (CSS) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Local SEO: structured data that tells Google this is a bakery -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Bakery",
+        "name": "Joyful Delights Bakery",
+        "image": "https://YOUR-USERNAME.github.io/joyful-delights-bakery/images/logo.jpeg",
+        "url": "https://YOUR-USERNAME.github.io/joyful-delights-bakery/",
+        "telephone": "+27762585159",
+        "email": "info@joyfuldelightsbakery.com",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "21701 Badger Street",
+            "addressLocality": "Nietgedacht",
+            "postalCode": "1739",
+            "addressRegion": "Gauteng",
+            "addressCountry": "ZA"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": -25.9567,
+            "longitude": 27.9619
+        },
+        "openingHours": ["Mo-Fr 07:00-18:00", "Sa 08:00-14:00"]
+    }
+    </script>
+</head>
+<body>
+    <a class="visually-hidden" href="#main-content">Skip to main content</a>
+
+    <!-- Site header with logo and navigation menu -->
+    <header>
+        <a class="brand" href="index.html">
+            <img src="images/thumbs/logo.jpeg" alt="Joyful Delights Bakery logo" width="64" height="64">
+            <span>Joyful Delights Bakery</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">☰</button>
+        <nav id="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="enquiry.html">Enquiry</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <h1>Contact Us</h1>
+
+        <section aria-labelledby="details-heading">
+            <h2 id="details-heading">Our Details</h2>
+            <address>
+                <p>Address: 21701 Badger Street, Nietgedacht, 1739</p>
+                <p>Phone: <a href="tel:+27762585159">076 258 5159</a></p>
+                <p>Email: <a href="mailto:info@joyfuldelightsbakery.com">info@joyfuldelightsbakery.com</a></p>
+            </address>
+        </section>
+
+        <section aria-labelledby="form-heading">
+            <h2 id="form-heading">Send Us a Message</h2>
+            <p>Questions, feedback or compliments? Fill in the form and your email app will open with the message ready to send to us. Fields marked * are required. To order, use our <a href="enquiry.html">enquiry form</a>.</p>
+
+            <!-- The action is a mailto: link. contact.js validates the form first, then builds the email. -->
+            <form id="contact-form" action="mailto:info@joyfuldelightsbakery.com" method="POST" enctype="text/plain" novalidate>
+                <div class="form-row">
+                    <label for="contact-name">Name *</label>
+                    <input type="text" id="contact-name" name="name" autocomplete="name" required minlength="2" maxlength="60">
+                    <span class="error-message" id="contact-name-error" aria-live="polite"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="contact-email">Email *</label>
+                    <input type="email" id="contact-email" name="email" autocomplete="email" required>
+                    <span class="error-message" id="contact-email-error" aria-live="polite"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="contact-phone">Phone (optional)</label>
+                    <input type="tel" id="contact-phone" name="phone" autocomplete="tel" placeholder="082 123 4567">
+                    <span class="error-message" id="contact-phone-error" aria-live="polite"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="message-type">Type of message *</label>
+                    <select id="message-type" name="message_type" required>
+                        <option value="">-- Please choose --</option>
+                        <option value="General question">General question</option>
+                        <option value="Feedback">Feedback</option>
+                        <option value="Compliment">Compliment</option>
+                        <option value="Complaint">Complaint</option>
+                        <option value="Partnership / supplier">Partnership / supplier</option>
+                    </select>
+                    <span class="error-message" id="message-type-error" aria-live="polite"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="subject">Subject *</label>
+                    <input type="text" id="subject" name="subject" required minlength="3" maxlength="80">
+                    <span class="error-message" id="subject-error" aria-live="polite"></span>
+                </div>
+
+                <div class="form-row">
+                    <label for="message">Message *</label>
+                    <textarea id="message" name="message" rows="6" required minlength="20" maxlength="1000"></textarea>
+                    <span class="hint" id="message-count">0 / 1000 characters</span>
+                    <span class="error-message" id="message-error" aria-live="polite"></span>
+                </div>
+
+                <button class="button" type="submit">Send Email</button>
+            </form>
+
+            <section id="contact-response" class="form-response" aria-live="polite"></section>
+        </section>
+
+        <section aria-labelledby="map-heading">
+            <h2 id="map-heading">Find Us Here</h2>
+            <p>The shaded circle shows our free delivery area.</p>
+            <button type="button" class="button secondary" id="recenter-map">Centre map on bakery</button>
+            <div id="map" role="region" aria-label="Map showing the bakery location"></div>
+        </section>
+    </main>
+
+    <!-- Footer with internal links, contact details and social media -->
+    <footer>
+        <ul>
+            <li><a href="products.html">Our Products</a></li>
+            <li><a href="enquiry.html">Order Enquiry</a></li>
+            <li><a href="contact.html">Find Us</a></li>
+        </ul>
+        <p>21701 Badger Street, Nietgedacht, 1739 &middot; <a href="tel:+27762585159">076 258 5159</a></p>
+        <!-- Replace these links with the bakery's real social media pages -->
+        <ul>
+            <li><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+        </ul>
+        <p>&copy; <span id="year">2026</span> Joyful Delights Bakery. All rights reserved.</p>
+    </footer>
+
+    <!-- Leaflet map library (JavaScript) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/contact.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Security: only allow files from this site and the trusted map library -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- SEO: unique title and description for this page -->
+    <title>Order Enquiry &amp; Cake Quote | Joyful Delights Bakery</title>
+    <meta name="description" content="Get an instant price estimate and availability for custom cakes, cupcakes, muffins and bulk bakery orders from Joyful Delights Bakery in Nietgedacht.">
+    <meta name="keywords" content="cake quote, custom cake order, bulk cupcake order, bakery enquiry, catering order Nietgedacht">
+    <meta name="author" content="Joyful Delights Bakery">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://YOUR-USERNAME.github.io/joyful-delights-bakery/enquiry.html">
+
+    <!-- Social media preview (Open Graph) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Order Enquiry &amp; Cake Quote | Joyful Delights Bakery">
+    <meta property="og:description" content="Get an instant estimate for custom cakes and bulk bakery orders.">
+    <meta property="og:url" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/enquiry.html">
+    <meta property="og:image" content="https://YOUR-USERNAME.github.io/joyful-delights-bakery/images/logo.jpeg">
+    <meta property="og:locale" content="en_ZA">
+
+    <link rel="icon" href="images/thumbs/logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a class="visually-hidden" href="#main-content">Skip to main content</a>
+
+    <!-- Site header with logo and navigation menu -->
+    <header>
+        <a class="brand" href="index.html">
+            <img src="images/thumbs/logo.jpeg" alt="Joyful Delights Bakery logo" width="64" height="64">
+            <span>Joyful Delights Bakery</span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">☰</button>
+        <nav id="main-nav" aria-label="Main navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="enquiry.html">Enquiry</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <h1>Make an Enquiry</h1>
+        <p>Planning a party or need a custom cake? Fill in the form to get an <strong>instant cost estimate</strong> and check if your date is available. Fields marked * are required. For general questions, use our <a href="contact.html">contact form</a>.</p>
+
+        <!-- novalidate turns off the browser pop-ups so our JavaScript messages are shown instead.
+             The HTML5 attributes (required, min, max, pattern) are still there as a backup. -->
+        <form id="enquiry-form" action="https://formspree.io/f/your-form-id" method="POST" novalidate>
+            <div class="form-row">
+                <label for="full-name">Full name *</label>
+                <input type="text" id="full-name" name="name" autocomplete="name" required minlength="2" maxlength="60">
+                <span class="error-message" id="full-name-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-row">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+                <span class="error-message" id="email-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-row">
+                <label for="phone">Phone number *</label>
+                <input type="tel" id="phone" name="phone" autocomplete="tel" required placeholder="082 123 4567" pattern="(\+27|0)[1-9][0-9 ]{8,11}">
+                <span class="error-message" id="phone-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-row">
+                <label for="enquiry-type">What is your enquiry about? *</label>
+                <select id="enquiry-type" name="enquiry_type" required>
+                    <option value="">-- Please choose --</option>
+                    <option value="custom-order">Custom cake / celebration order</option>
+                    <option value="bulk-order">Bulk order (school, office, party)</option>
+                    <option value="catering">Event catering</option>
+                    <option value="availability">Product availability</option>
+                </select>
+                <span class="error-message" id="enquiry-type-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-row">
+                <label for="product">Product *</label>
+                <!-- Options are added by enquiry.js from products-data.js -->
+                <select id="product" name="product" required>
+                    <option value="">-- Please choose --</option>
+                </select>
+                <span class="error-message" id="product-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-row">
+                <label for="quantity">Quantity *</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="200" step="1" value="1" required>
+                <span class="hint">Order 24 or more items and get 10% off.</span>
+                <span class="error-message" id="quantity-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-row">
+                <label for="date-needed">Date needed *</label>
+                <input type="date" id="date-needed" name="date_needed" required>
+                <span class="hint">We need at least 2 days' notice. Closed on Sundays.</span>
+                <span class="error-message" id="date-needed-error" aria-live="polite"></span>
+            </div>
+
+            <div class="form-row">
+                <label for="message">Extra details (optional)</label>
+                <textarea id="message" name="message" rows="5" maxlength="500" placeholder="Flavour, theme, writing on the cake, allergies..."></textarea>
+                <span class="error-message" id="message-error" aria-live="polite"></span>
+            </div>
+
+            <button class="button" type="submit">Get My Estimate</button>
+        </form>
+
+        <p id="enquiry-status" aria-live="polite"></p>
+
+        <!-- The estimate is shown here by enquiry.js -->
+        <section id="enquiry-response" class="form-response" aria-live="polite"></section>
+    </main>
+
+    <!-- Footer with internal links, contact details and social media -->
+    <footer>
+        <ul>
+            <li><a href="products.html">Our Products</a></li>
+            <li><a href="enquiry.html">Order Enquiry</a></li>
+            <li><a href="contact.html">Find Us</a></li>
+        </ul>
+        <p>21701 Badger Street, Nietgedacht, 1739 &middot; <a href="tel:+27762585159">076 258 5159</a></p>
+        <!-- Replace these links with the bakery's real social media pages -->
+        <ul>
+            <li><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+        </ul>
+        <p>&copy; <span id="year">2026</span> Joyful Delights Bakery. All rights reserved.</p>
+    </footer>
+
+    <script src="js/products-data.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/enquiry.js" defer></script>
+</body>
+</html>
