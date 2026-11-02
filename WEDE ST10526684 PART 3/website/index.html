@@ -86,10 +86,12 @@
             </div>
         </section>
 
-        <!-- Featured products are added here by main.js from products-data.js -->
+        <!-- Featured products are loaded from products.json by main.js -->
         <section class="reveal" aria-labelledby="featured-heading">
             <h2 id="featured-heading">Customer Favourites</h2>
-            <div id="featured-products" class="product-grid"></div>
+            <div id="featured-products" class="product-grid" aria-live="polite">
+                <p class="loading">Loading our favourites…</p>
+            </div>
             <p><a href="products.html">See all our cakes, muffins and treats &rarr;</a></p>
         </section>
 

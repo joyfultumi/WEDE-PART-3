@@ -1,16 +1,34 @@
 // products.js
-// Products page: loads the product cards dynamically from PRODUCTS,
+// Products page: loads the products from products.json, builds the cards,
 // adds search / category filter / sort, and a lightbox gallery.
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
     const grid = document.getElementById("product-grid");
     const searchInput = document.getElementById("search");
     const categorySelect = document.getElementById("category");
     const sortSelect = document.getElementById("sort");
     const resultsCount = document.getElementById("results-count");
+    const controls = [searchInput, categorySelect, sortSelect];
+
+    // ----- 1. Load the products (AJAX) -----
+    let products = [];
+    controls.forEach(function (control) { control.disabled = true; });
+    grid.setAttribute("aria-busy", "true");
+
+    try {
+        products = await loadProducts();
+    } catch (error) {
+        showLoadError(grid, error);
+        resultsCount.textContent = "";
+        return; // nothing else on this page can work without products
+    } finally {
+        grid.removeAttribute("aria-busy");
+    }
+
+    controls.forEach(function (control) { control.disabled = false; });
 
     // Fill the category dropdown from the product data
-    const categories = [...new Set(PRODUCTS.map(function (p) { return p.category; }))];
+    const categories = [...new Set(products.map(function (p) { return p.category; }))];
     categories.forEach(function (category) {
         const option = document.createElement("option");
         option.value = category;
@@ -21,12 +39,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // The list currently on screen - the lightbox uses this order
     let visibleProducts = [];
 
+    // ----- 2. Search, filter, sort and draw -----
     function renderProducts() {
         const searchText = searchInput.value.trim().toLowerCase();
         const category = categorySelect.value;
 
-        // 1. Filter
-        visibleProducts = PRODUCTS.filter(function (product) {
+        // Filter
+        visibleProducts = products.filter(function (product) {
             const matchesSearch =
                 product.name.toLowerCase().includes(searchText) ||
                 product.description.toLowerCase().includes(searchText);
@@ -34,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return matchesSearch && matchesCategory;
         });
 
-        // 2. Sort
+        // Sort
         const sortBy = sortSelect.value;
         visibleProducts.sort(function (a, b) {
             if (sortBy === "price-low") return a.price - b.price;
@@ -43,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return a.name.localeCompare(b.name);
         });
 
-        // 3. Draw the cards
+        // Draw the cards
         grid.innerHTML = "";
         visibleProducts.forEach(function (product) {
             grid.appendChild(createProductCard(product, true));
@@ -51,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         resultsCount.textContent = visibleProducts.length === 0
             ? "No products match your search. Try another word or category."
-            : "Showing " + visibleProducts.length + " of " + PRODUCTS.length + " products";
+            : "Showing " + visibleProducts.length + " of " + products.length + " products";
     }
 
     searchInput.addEventListener("input", renderProducts);
@@ -59,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sortSelect.addEventListener("change", renderProducts);
     renderProducts();
 
-    // ===== Lightbox =====
+    // ----- 3. Lightbox -----
     const lightbox = document.getElementById("lightbox");
     const lightboxImage = document.getElementById("lightbox-image");
     const lightboxCaption = document.getElementById("lightbox-caption");

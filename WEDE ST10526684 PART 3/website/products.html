@@ -75,10 +75,12 @@
             </div>
         </section>
 
-        <p id="results-count" aria-live="polite"></p>
+        <p id="results-count" aria-live="polite">Loading products…</p>
 
-        <!-- Product cards are loaded here by products.js -->
-        <section id="product-grid" class="product-grid" aria-label="Product list"></section>
+        <!-- Product cards are loaded from products.json by products.js -->
+        <section id="product-grid" class="product-grid" aria-label="Product list">
+            <p class="loading">Loading products…</p>
+        </section>
 
         <noscript>
             <p>Please turn on JavaScript to see our full product list, or <a href="contact.html">contact us</a> for a price list.</p>

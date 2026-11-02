@@ -12,14 +12,32 @@ document.addEventListener("DOMContentLoaded", function () {
     const productSelect = document.getElementById("product");
     const dateInput = document.getElementById("date-needed");
     const responseBox = document.getElementById("enquiry-response");
+    let products = [];
 
-    // Fill the product dropdown from the product data
-    PRODUCTS.forEach(function (product) {
-        const option = document.createElement("option");
-        option.value = product.id;
-        option.textContent = product.name + " (" + formatRand(product.price) + " " + product.unit + ")";
-        productSelect.appendChild(option);
-    });
+    fillProductDropdown();
+
+    // Load the products from products.json and fill the dropdown
+    async function fillProductDropdown() {
+        const placeholder = productSelect.options[0];
+        placeholder.textContent = "Loading products…";
+        productSelect.disabled = true;
+
+        try {
+            products = await loadProducts();
+            products.forEach(function (product) {
+                const option = document.createElement("option");
+                option.value = product.id;
+                option.textContent = product.name + " (" + formatRand(product.price) + " " + product.unit + ")";
+                productSelect.appendChild(option);
+            });
+            placeholder.textContent = "-- Please choose --";
+            productSelect.disabled = false;
+        } catch (error) {
+            console.error(error);
+            placeholder.textContent = "Products could not be loaded";
+            showError(productSelect, "Our product list couldn't be loaded. Please refresh the page or phone us on 076 258 5159.");
+        }
+    }
 
     // Earliest date that can be picked = today + notice days
     dateInput.min = toInputDate(addDays(new Date(), NOTICE_DAYS));
@@ -93,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ----- Work out the cost and availability -----
     function buildQuote() {
-        const product = PRODUCTS.find(function (p) { return p.id === productSelect.value; });
+        const product = products.find(function (p) { return p.id === productSelect.value; });
         const quantity = Number(document.getElementById("quantity").value);
         const date = new Date(dateInput.value + "T00:00:00");
         const subtotal = product.price * quantity;

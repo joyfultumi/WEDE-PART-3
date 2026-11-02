@@ -129,14 +129,23 @@ function setUpAccordion() {
     });
 }
 
-// ===== Home page: build the "featured treats" cards from PRODUCTS =====
-function showFeaturedProducts() {
+// ===== Home page: build the "featured treats" cards from products.json =====
+async function showFeaturedProducts() {
     const container = document.getElementById("featured-products");
-    if (!container || typeof PRODUCTS === "undefined") return;
+    if (!container || typeof loadProducts === "undefined") return;
 
-    PRODUCTS.filter(function (p) { return p.featured; }).forEach(function (product) {
-        container.appendChild(createProductCard(product, false));
-    });
+    container.setAttribute("aria-busy", "true");
+    try {
+        const products = await loadProducts();
+        container.innerHTML = ""; // remove the "Loading…" message
+        products.filter(function (p) { return p.featured; }).forEach(function (product) {
+            container.appendChild(createProductCard(product, false));
+        });
+    } catch (error) {
+        showLoadError(container, error);
+    } finally {
+        container.removeAttribute("aria-busy");
+    }
 }
 
 // Creates one product card element. Used on the Home and Products pages.
