@@ -1,7 +1,8 @@
 // contact.js
 // Contact page: validates the contact form, compiles the details into an
 // email and opens the user's email app addressed to the bakery.
-// Also draws the interactive Leaflet map.
+// Also draws the interactive Leaflet map with location-based features:
+// delivery zones, a "check my delivery" tool and directions to the bakery.
 
 const BAKERY_EMAIL = "info@joyfuldelightsbakery.com";
 
@@ -127,32 +128,177 @@ function failContact(field, message) {
 }
 
 // ===== Interactive map using Leaflet + OpenStreetMap =====
+// Delivery zones, measured in a straight line from the bakery
+const DELIVERY_ZONES = [
+    { maxKm: 10, fee: 0, label: "Free delivery zone", color: "#8e24aa", fill: "#e083d4" },
+    { maxKm: 25, fee: 50, label: "R50 delivery zone", color: "#c77700", fill: "#ffd08a" }
+];
+
+const DIRECTIONS_URL = "https://www.google.com/maps/dir/?api=1";
+
 function setUpMap() {
     const mapBox = document.getElementById("map");
     if (!mapBox || typeof L === "undefined") return;
 
-    const map = L.map("map", { scrollWheelZoom: false }).setView(BAKERY_LOCATION, 14);
+    const map = L.map("map", { scrollWheelZoom: false }).setView(BAKERY_LOCATION, 11);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    L.marker(BAKERY_LOCATION)
+    // Draw the delivery zones, biggest first so the smaller one sits on top
+    DELIVERY_ZONES.slice().reverse().forEach(function (zone) {
+        L.circle(BAKERY_LOCATION, {
+            radius: zone.maxKm * 1000,
+            color: zone.color,
+            fillColor: zone.fill,
+            fillOpacity: 0.15,
+            weight: 2
+        }).addTo(map).bindTooltip(zone.label + " (up to " + zone.maxKm + " km)");
+    });
+
+    L.marker(BAKERY_LOCATION, { title: "Joyful Delights Bakery" })
         .addTo(map)
         .bindPopup("<strong>Joyful Delights Bakery</strong><br>21701 Badger Street, Nietgedacht, 1739")
         .openPopup();
 
-    // Draw a circle showing the area we deliver to (about 10 km)
-    L.circle(BAKERY_LOCATION, {
-        radius: 10000,
-        color: "#8e24aa",
-        fillColor: "#e083d4",
-        fillOpacity: 0.12
-    }).addTo(map).bindTooltip("Free delivery area (10 km)");
+    // Things drawn for the customer's location (replaced on every check)
+    const customerLayer = L.layerGroup().addTo(map);
+    const resultBox = document.getElementById("delivery-result");
+    const directionsLink = document.getElementById("directions-link");
+    const locateButton = document.getElementById("locate-me");
+    const addressForm = document.getElementById("address-search");
+    const addressInput = document.getElementById("address-input");
+
+    // Directions to the bakery work even before the customer checks a location
+    directionsLink.href = DIRECTIONS_URL + "&destination=" + BAKERY_LOCATION.join(",");
+
+    // ----- Option 1: use the device's location (Geolocation API) -----
+    locateButton.addEventListener("click", function () {
+        if (!("geolocation" in navigator)) {
+            showMessage("Your browser can't share its location. Search for your suburb instead.", "warning");
+            return;
+        }
+
+        locateButton.disabled = true;
+        showMessage("Finding your location… please allow location access if your browser asks.");
+
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                locateButton.disabled = false;
+                checkDelivery([position.coords.latitude, position.coords.longitude], "Your location");
+            },
+            function (error) {
+                locateButton.disabled = false;
+                const reasons = {
+                    1: "Location access was blocked.",
+                    2: "Your location could not be found.",
+                    3: "Finding your location took too long."
+                };
+                showMessage((reasons[error.code] || "Something went wrong.") +
+                    " Search for your suburb or click your area on the map instead.", "warning");
+            },
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+        );
+    });
+
+    // ----- Option 2: search for a suburb or address (OpenStreetMap Nominatim) -----
+    addressForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const query = addressInput.value.trim();
+        clearError(addressInput);
+
+        if (query.length < 3) {
+            showError(addressInput, "Type at least 3 letters, e.g. Lanseria or Fourways.");
+            return;
+        }
+
+        showMessage("Searching for “" + query + "”…");
+        try {
+            const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=za&q=" +
+                encodeURIComponent(query);
+            const response = await fetch(url, { headers: { Accept: "application/json" } });
+            if (!response.ok) throw new Error("Search failed: " + response.status);
+
+            const results = await response.json();
+            if (results.length === 0) {
+                showMessage("We couldn't find “" + query + "”. Try a nearby suburb or town name.", "warning");
+                return;
+            }
+            const place = results[0];
+            const shortName = place.name || place.display_name.split(",")[0];
+            checkDelivery([Number(place.lat), Number(place.lon)], shortName);
+        } catch (error) {
+            console.error(error);
+            showMessage("Address search is not available right now. Click your area on the map instead.", "warning");
+        }
+    });
+
+    // ----- Option 3: click anywhere on the map -----
+    map.on("click", function (event) {
+        checkDelivery([event.latlng.lat, event.latlng.lng], "The point you clicked");
+    });
+
+    // Works out the distance and zone, then updates the map and the message
+    function checkDelivery(location, placeName) {
+        const km = distanceInKm(BAKERY_LOCATION, location);
+        const zone = DELIVERY_ZONES.find(function (z) { return km <= z.maxKm; });
+
+        // Draw the customer's marker and a dashed line to the bakery
+        customerLayer.clearLayers();
+        const label = document.createElement("span");
+        label.textContent = placeName; // textContent, because Leaflet would run a plain string as HTML
+        L.circleMarker(location, { radius: 9, color: "#5b0660", fillColor: "#ffffff", fillOpacity: 1, weight: 4 })
+            .addTo(customerLayer)
+            .bindTooltip(label, { permanent: true, direction: "top", offset: [0, -10] });
+        L.polyline([location, BAKERY_LOCATION], { color: "#5b0660", weight: 3, dashArray: "6 8" })
+            .addTo(customerLayer);
+        map.fitBounds(L.latLngBounds([location, BAKERY_LOCATION]), { padding: [50, 50], maxZoom: 14 });
+
+        // Message for the customer
+        const distanceText = km.toFixed(1) + " km";
+        if (!zone) {
+            showMessage(placeName + " is " + distanceText + " from the bakery - outside our delivery area. " +
+                "You're welcome to collect your order from the bakery.", "warning");
+        } else if (zone.fee === 0) {
+            showMessage("🎉 " + placeName + " is " + distanceText + " from the bakery - you get FREE delivery!", "success");
+        } else {
+            showMessage(placeName + " is " + distanceText + " from the bakery - delivery costs " +
+                formatFee(zone.fee) + ".", "success");
+        }
+
+        // Directions now start from the customer's location
+        const origin = location.map(function (n) { return n.toFixed(5); }).join(",");
+        directionsLink.href = DIRECTIONS_URL + "&origin=" + origin +
+            "&destination=" + BAKERY_LOCATION.join(",");
+    }
+
+    function showMessage(text, type) {
+        resultBox.textContent = text;
+        resultBox.className = "delivery-result" + (type ? " " + type : "");
+    }
 
     // Button that zooms back to the bakery
     document.getElementById("recenter-map").addEventListener("click", function () {
-        map.setView(BAKERY_LOCATION, 14);
+        map.setView(BAKERY_LOCATION, 11);
     });
+}
+
+// Straight-line distance between two [latitude, longitude] points,
+// using the Haversine formula (the Earth is treated as a sphere).
+function distanceInKm(pointA, pointB) {
+    const EARTH_RADIUS_KM = 6371;
+    const toRadians = function (degrees) { return degrees * Math.PI / 180; };
+
+    const dLat = toRadians(pointB[0] - pointA[0]);
+    const dLon = toRadians(pointB[1] - pointA[1]);
+    const a = Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRadians(pointA[0])) * Math.cos(toRadians(pointB[0])) * Math.sin(dLon / 2) ** 2;
+
+    return EARTH_RADIUS_KM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function formatFee(amount) {
+    return "R" + amount.toFixed(2);
 }

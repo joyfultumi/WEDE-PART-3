@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Security: only allow files from this site and the trusted map library -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io https://nominatim.openstreetmap.org; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- SEO: unique title and description for this page -->
@@ -148,10 +148,29 @@
         </section>
 
         <section aria-labelledby="map-heading">
-            <h2 id="map-heading">Find Us Here</h2>
-            <p>The shaded circle shows our free delivery area.</p>
-            <button type="button" class="button secondary" id="recenter-map">Centre map on bakery</button>
-            <div id="map" role="region" aria-label="Map showing the bakery location"></div>
+            <h2 id="map-heading">Find Us &amp; Check Delivery</h2>
+            <p>We deliver <strong>free within 10 km</strong> of the bakery (purple circle) and for <strong>R50 within 25 km</strong> (orange circle). Check if we deliver to you:</p>
+
+            <!-- Location-based tools - handled by setUpMap() in contact.js -->
+            <div class="delivery-tools">
+                <button type="button" class="button" id="locate-me">📍 Use my location</button>
+
+                <form id="address-search" class="address-search" novalidate>
+                    <label for="address-input" class="visually-hidden">Suburb or address</label>
+                    <input type="text" id="address-input" placeholder="…or type your suburb, e.g. Lanseria" autocomplete="address-level2" maxlength="100">
+                    <button type="submit" class="button secondary">Check</button>
+                    <span class="error-message" id="address-input-error" aria-live="polite"></span>
+                </form>
+            </div>
+            <p class="hint">You can also click anywhere on the map. Distances are measured in a straight line.</p>
+
+            <p id="delivery-result" class="delivery-result" aria-live="polite">Choose an option above to see your delivery cost.</p>
+
+            <div class="map-actions">
+                <a class="button secondary" id="directions-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=-25.9567,27.9619" target="_blank" rel="noopener noreferrer">Get directions ↗</a>
+                <button type="button" class="button secondary" id="recenter-map">Centre map on bakery</button>
+            </div>
+            <div id="map" role="region" aria-label="Map showing the bakery location and delivery zones"></div>
         </section>
     </main>
 

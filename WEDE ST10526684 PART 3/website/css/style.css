@@ -594,12 +594,65 @@ textarea.invalid {
     background: #fff4e0;
 }
 
-/* ===== Map ===== */
+/* ===== Map and delivery checker ===== */
 #map {
-    height: 380px;
+    height: 420px;
     width: 100%;
     border-radius: var(--radius);
     margin-top: 12px;
+    cursor: crosshair;
+}
+
+.delivery-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.address-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1 1 300px;
+    max-width: none;
+}
+
+.address-search input {
+    flex: 1 1 200px;
+}
+
+.address-search .error-message {
+    flex-basis: 100%;
+}
+
+.delivery-result {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 6px solid var(--pink);
+    background: var(--pink-light);
+    font-weight: bold;
+}
+
+.delivery-result.success {
+    border-left-color: var(--success);
+    background: #eaf7ee;
+}
+
+.delivery-result.warning {
+    border-left-color: #c77700;
+    background: #fff4e0;
+}
+
+.map-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: wait;
 }
 
 /* ===== Footer ===== */
