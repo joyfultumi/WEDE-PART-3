@@ -3,9 +3,12 @@
 // cost and availability, shows it to the user, and sends the form with AJAX.
 
 const NOTICE_DAYS = 2;          // orders need at least 2 days' notice
+const CATERING_NOTICE_DAYS = 7; // event catering needs a week
+const MAX_MONTHS_AHEAD = 6;     // we take orders up to 6 months ahead
 const BULK_QUANTITY = 24;       // 24 or more items gets a discount
 const BULK_DISCOUNT = 0.10;     // 10% discount
 const MAX_QUANTITY = 200;
+const MIN_CUSTOM_DETAILS = 15;  // custom cakes need a short description
 
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("enquiry-form");
@@ -61,25 +64,57 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("product-hint").textContent = "";
     });
 
-    // Earliest date that can be picked = today + notice days
+    // Earliest and latest dates that can be picked
     dateInput.min = toInputDate(addDays(new Date(), NOTICE_DAYS));
+    const latest = new Date();
+    latest.setMonth(latest.getMonth() + MAX_MONTHS_AHEAD);
+    if (latest.getDay() === 0) latest.setDate(latest.getDate() - 1); // never suggest a Sunday
+    dateInput.max = toInputDate(latest);
 
-    // Re-check a field as soon as the user leaves it
-    form.querySelectorAll("input, select, textarea").forEach(function (field) {
-        field.addEventListener("blur", function () { validateField(field); });
-        field.addEventListener("input", function () {
-            if (field.classList.contains("invalid")) validateField(field);
+    const typeSelect = document.getElementById("enquiry-type");
+    const messageBox = document.getElementById("message");
+    const messageLabel = document.querySelector('label[for="message"]');
+    const messageCounter = document.getElementById("message-count");
+
+    // Check a field when the user leaves it, and again while they fix it
+    getFormFields(form).forEach(function (field) {
+        field.addEventListener("blur", function () {
+            if (field.value.trim() !== "" || field.classList.contains("invalid")) validateField(field);
         });
+        field.addEventListener("input", function () {
+            if (field.classList.contains("invalid") || field.classList.contains("valid")) validateField(field);
+        });
+    });
+
+    // Dates are checked as soon as one is picked, so Sundays are caught straight away
+    dateInput.addEventListener("change", function () { validateField(dateInput); });
+
+    // Some rules depend on the enquiry type, so re-check those fields when it changes
+    typeSelect.addEventListener("change", function () {
+        const isCustom = typeSelect.value === "custom-order";
+        messageLabel.textContent = isCustom ? "Describe your cake *" : "Extra details (optional)";
+        messageBox.required = isCustom;
+
+        [document.getElementById("quantity"), dateInput, messageBox].forEach(function (field) {
+            if (field.value.trim() !== "" || field.classList.contains("invalid")) validateField(field);
+        });
+    });
+
+    // Live character counter for the details box
+    messageBox.addEventListener("input", function () {
+        messageCounter.textContent = messageBox.value.length + " / 500 characters";
     });
 
     form.addEventListener("submit", async function (event) {
         event.preventDefault(); // stop the page reloading
 
-        // Validate every field and focus the first one with a problem
-        const fields = Array.from(form.querySelectorAll("input, select, textarea"));
-        const invalidFields = fields.filter(function (field) { return !validateField(field); });
-        if (invalidFields.length > 0) {
-            invalidFields[0].focus();
+        // Bots are quietly ignored - no message, so they learn nothing
+        if (looksLikeSpam(form)) return;
+
+        // Validate every field; the error summary lists anything wrong.
+        // An old estimate is hidden so it can't be mistaken for the new one.
+        if (!validateForm(form, validateField)) {
+            responseBox.classList.remove("show");
             return;
         }
 
@@ -91,38 +126,74 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----- Validation rules for each field -----
     function validateField(field) {
         const value = field.value.trim();
+        const type = typeSelect.value;
         clearError(field);
 
         switch (field.id) {
             case "full-name":
-                if (value.length < 2) return fail(field, "Please enter your full name.");
-                if (!/^[A-Za-zÀ-ÿ' -]+$/.test(value)) return fail(field, "Name can only contain letters, spaces, hyphens and apostrophes.");
+                if (value === "") return fail(field, "Please enter your full name.");
+                if (!isValidName(value)) return fail(field, "Name can only contain letters, spaces, hyphens and apostrophes.");
+                if (!/\S+\s+\S+/.test(value)) return fail(field, "Please enter your first name and surname.");
                 break;
+
             case "email":
+                if (value === "") return fail(field, "Please enter your email address.");
                 if (!isValidEmail(value)) return fail(field, "Please enter a valid email, e.g. name@example.com.");
                 break;
+
             case "phone":
+                if (value === "") return fail(field, "Please enter your phone number so we can confirm your order.");
                 if (!isValidSAPhone(value)) return fail(field, "Please enter a valid SA number, e.g. 082 123 4567.");
                 break;
+
             case "enquiry-type":
-            case "product":
-                if (value === "") return fail(field, "Please choose an option.");
+                if (value === "") return fail(field, "Please choose what your enquiry is about.");
                 break;
+
+            case "product":
+                if (value === "") return fail(field, "Please choose a product.");
+                break;
+
             case "quantity": {
                 const qty = Number(value);
-                if (!Number.isInteger(qty) || qty < 1 || qty > MAX_QUANTITY) {
+                if (value === "" || !Number.isInteger(qty) || qty < 1 || qty > MAX_QUANTITY) {
                     return fail(field, "Quantity must be a whole number from 1 to " + MAX_QUANTITY + ".");
+                }
+                if (type === "bulk-order" && qty < BULK_QUANTITY) {
+                    return fail(field, "Bulk orders start at " + BULK_QUANTITY + " items. For fewer, choose another enquiry type.");
                 }
                 break;
             }
-            case "date-needed":
+
+            case "date-needed": {
                 if (value === "") return fail(field, "Please choose the date you need your order.");
-                if (value < dateInput.min) return fail(field, "We need at least " + NOTICE_DAYS + " days' notice. Choose " + dateInput.min + " or later.");
+                const date = new Date(value + "T00:00:00");
+                if (isNaN(date)) return fail(field, "Please enter a real date.");
+                if (value < dateInput.min) {
+                    return fail(field, "We need at least " + NOTICE_DAYS + " days' notice. Choose " + formatDate(dateInput.min) + " or later.");
+                }
+                if (type === "catering" && value < toInputDate(addDays(new Date(), CATERING_NOTICE_DAYS))) {
+                    return fail(field, "Event catering needs at least " + CATERING_NOTICE_DAYS + " days' notice.");
+                }
+                if (value > dateInput.max) {
+                    return fail(field, "We take orders up to " + MAX_MONTHS_AHEAD + " months ahead. Choose " + formatDate(dateInput.max) + " or earlier.");
+                }
+                if (date.getDay() === 0) {
+                    return fail(field, "We're closed on Sundays. Please choose a Monday to Saturday date.");
+                }
                 break;
+            }
+
             case "message":
+                if (type === "custom-order" && value.length < MIN_CUSTOM_DETAILS) {
+                    return fail(field, "Please describe your cake (flavour, theme, writing) in at least " + MIN_CUSTOM_DETAILS + " characters.");
+                }
                 if (value.length > 500) return fail(field, "Please keep your message under 500 characters.");
+                if (containsLink(value)) return fail(field, "Please remove web links from your message.");
                 break;
         }
+
+        markValid(field);
         return true;
     }
 
@@ -135,10 +206,8 @@ document.addEventListener("DOMContentLoaded", function () {
     function buildQuote() {
         const product = products.find(function (p) { return p.id === productSelect.value; });
         const quantity = Number(document.getElementById("quantity").value);
-        const date = new Date(dateInput.value + "T00:00:00");
         const subtotal = product.price * quantity;
         const discount = quantity >= BULK_QUANTITY ? subtotal * BULK_DISCOUNT : 0;
-        const isSunday = date.getDay() === 0;
 
         return {
             name: document.getElementById("full-name").value.trim(),
@@ -148,8 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
             subtotal: subtotal,
             discount: discount,
             total: subtotal - discount,
-            dateText: date.toLocaleDateString("en-ZA", { weekday: "long", day: "numeric", month: "long", year: "numeric" }),
-            available: !isSunday,
+            dateText: formatDate(dateInput.value),
             needsCall: quantity > 100
         };
     }
@@ -157,7 +225,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // ----- Show the response to the user (built with DOM methods) -----
     function showQuote(quote) {
         responseBox.innerHTML = "";
-        responseBox.classList.toggle("warning", !quote.available);
 
         const heading = document.createElement("h3");
         heading.textContent = "Thank you, " + quote.name + "! Here is your estimate:";
@@ -173,13 +240,9 @@ document.addEventListener("DOMContentLoaded", function () {
         addItem(list, "Estimated total: " + formatRand(quote.total));
         responseBox.appendChild(list);
 
+        // Sundays and too-early dates are already rejected by validation
         const availability = document.createElement("p");
-        if (!quote.available) {
-            availability.textContent = "⚠ We are closed on Sundays, so " + quote.dateText +
-                " is not available. Please choose a Monday to Saturday date, or collect on the Saturday before.";
-        } else {
-            availability.textContent = "✔ " + quote.dateText + " is available. Your order will be ready for collection from 08:00.";
-        }
+        availability.textContent = "✔ " + quote.dateText + " is available. Your order will be ready for collection from 08:00.";
         responseBox.appendChild(availability);
 
         if (quote.needsCall) {
@@ -216,6 +279,7 @@ async function sendWithAjax(form) {
     }
 
     status.textContent = "Sending your enquiry…";
+    setSubmitting(form, true, "Sending…"); // stops a second click sending it twice
     try {
         const response = await fetch(form.action, {
             method: "POST",
@@ -225,9 +289,12 @@ async function sendWithAjax(form) {
         if (!response.ok) throw new Error("Server responded with " + response.status);
         status.textContent = "Your enquiry has been sent. We will reply by email within one working day.";
         form.reset();
+        getFormFields(form).forEach(clearError);
     } catch (error) {
         status.textContent = "Sorry, your enquiry could not be sent. Please try again or phone us on 076 258 5159.";
         console.error(error);
+    } finally {
+        setSubmitting(form, false);
     }
 }
 
@@ -236,6 +303,12 @@ function addDays(date, days) {
     const copy = new Date(date);
     copy.setDate(copy.getDate() + days);
     return copy;
+}
+
+// Turns "2026-11-07" into "Saturday, 7 November 2026"
+function formatDate(isoDate) {
+    return new Date(isoDate + "T00:00:00").toLocaleDateString("en-ZA",
+        { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 }
 
 // Formats a date as YYYY-MM-DD (the format <input type="date"> uses)

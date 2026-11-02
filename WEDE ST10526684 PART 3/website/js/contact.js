@@ -26,22 +26,43 @@ function setUpContactForm() {
         counter.textContent = message.value.length + " / 1000 characters";
     });
 
-    form.querySelectorAll("input, select, textarea").forEach(function (field) {
-        field.addEventListener("blur", function () { validateContactField(field); });
-        field.addEventListener("input", function () {
-            if (field.classList.contains("invalid")) validateContactField(field);
+    const fields = getFormFields(form);
+    const typeSelect = document.getElementById("message-type");
+    const phoneInput = document.getElementById("contact-phone");
+    const phoneLabel = document.querySelector('label[for="contact-phone"]');
+
+    // Check a field when the user leaves it, and again while they fix it
+    fields.forEach(function (field) {
+        field.addEventListener("blur", function () {
+            if (field.value.trim() !== "" || field.classList.contains("invalid")) validateContactField(field);
         });
+        field.addEventListener("input", function () {
+            if (field.classList.contains("invalid") || field.classList.contains("valid")) validateContactField(field);
+        });
+    });
+
+    // Complaints need a phone number so we can call back
+    typeSelect.addEventListener("change", function () {
+        const isComplaint = typeSelect.value === "Complaint";
+        phoneLabel.textContent = isComplaint ? "Phone * (so we can call you back)" : "Phone (optional)";
+        phoneInput.required = isComplaint;
+        if (phoneInput.value.trim() !== "" || phoneInput.classList.contains("invalid") || !isComplaint) {
+            validateContactField(phoneInput);
+        }
     });
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const fields = Array.from(form.querySelectorAll("input, select, textarea"));
-        const invalidFields = fields.filter(function (field) { return !validateContactField(field); });
-        if (invalidFields.length > 0) {
-            invalidFields[0].focus();
-            return;
-        }
+        // Bots are quietly ignored
+        if (looksLikeSpam(form)) return;
+
+        // Validate every field; the error summary lists anything wrong
+        if (!validateForm(form, validateContactField)) return;
+
+        // Stop double clicks opening two emails
+        setSubmitting(form, true, "Opening your email app…");
+        setTimeout(function () { setSubmitting(form, false); }, 3000);
 
         // Compile the form data into an email
         const name = document.getElementById("contact-name").value.trim();
@@ -84,6 +105,8 @@ function setUpContactForm() {
         form.reset();
         fields.forEach(clearError);
         counter.textContent = "0 / 1000 characters";
+        phoneLabel.textContent = "Phone (optional)";
+        phoneInput.required = false;
     });
 
     // Hide the success message when the user starts typing a new message
@@ -94,31 +117,45 @@ function setUpContactForm() {
 
 function validateContactField(field) {
     const value = field.value.trim();
+    const type = document.getElementById("message-type").value;
     clearError(field);
 
     switch (field.id) {
         case "contact-name":
-            if (value.length < 2) return failContact(field, "Please enter your name.");
-            if (!/^[A-Za-zÀ-ÿ' -]+$/.test(value)) return failContact(field, "Name can only contain letters, spaces, hyphens and apostrophes.");
+            if (value === "") return failContact(field, "Please enter your name.");
+            if (value.length < 2) return failContact(field, "Name must be at least 2 letters.");
+            if (!isValidName(value)) return failContact(field, "Name can only contain letters, spaces, hyphens and apostrophes.");
             break;
+
         case "contact-email":
+            if (value === "") return failContact(field, "Please enter your email address so we can reply.");
             if (!isValidEmail(value)) return failContact(field, "Please enter a valid email, e.g. name@example.com.");
             break;
+
         case "contact-phone":
-            // Optional - only check it if something was typed
+            // Optional, except for complaints
+            if (value === "" && type === "Complaint") return failContact(field, "Please give a phone number so we can call you about your complaint.");
             if (value !== "" && !isValidSAPhone(value)) return failContact(field, "Please enter a valid SA number, e.g. 082 123 4567.");
             break;
+
         case "message-type":
             if (value === "") return failContact(field, "Please choose the type of message.");
             break;
+
         case "subject":
             if (value.length < 3 || value.length > 80) return failContact(field, "Subject must be 3 to 80 characters.");
+            if (!/[A-Za-z]/.test(value)) return failContact(field, "Subject must include some words.");
+            if (value.length > 5 && value === value.toUpperCase()) return failContact(field, "Please don't type the subject in capital letters only.");
             break;
+
         case "message":
-            if (value.length < 20) return failContact(field, "Please write at least 20 characters so we can help you.");
+            if (value.length < 20) return failContact(field, "Please write at least 20 characters so we can help you (" + value.length + " so far).");
             if (value.length > 1000) return failContact(field, "Please keep your message under 1000 characters.");
+            if (containsLink(value)) return failContact(field, "Please remove web links from your message.");
             break;
     }
+
+    markValid(field);
     return true;
 }
 

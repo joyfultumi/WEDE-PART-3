@@ -112,7 +112,14 @@
             <div class="form-row">
                 <label for="message">Extra details (optional)</label>
                 <textarea id="message" name="message" rows="5" maxlength="500" placeholder="Flavour, theme, writing on the cake, allergies..."></textarea>
+                <span class="hint" id="message-count">0 / 500 characters</span>
                 <span class="error-message" id="message-error" aria-live="polite"></span>
+            </div>
+
+            <!-- Spam trap: hidden from people, but bots fill it in. enquiry.js ignores any form where it isn't empty. -->
+            <div class="hp-field" aria-hidden="true">
+                <label for="enquiry-website">Leave this field empty</label>
+                <input type="text" id="enquiry-website" name="website" tabindex="-1" autocomplete="off">
             </div>
 
             <button class="button" type="submit">Get My Estimate</button>

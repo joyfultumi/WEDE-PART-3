@@ -596,6 +596,53 @@ input.invalid,
 select.invalid,
 textarea.invalid {
     border-color: var(--error);
+    background-color: #fffafa;
+}
+
+input.valid,
+select.valid,
+textarea.valid {
+    border-color: var(--success);
+}
+
+/* List of all problems, shown above the form when Submit finds errors */
+.error-summary {
+    border: 2px solid var(--error);
+    border-radius: var(--radius);
+    background: #fdecee;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    max-width: 640px;
+    animation: fadeIn 0.3s ease;
+}
+
+.error-summary h3 {
+    color: var(--error);
+    margin: 0 0 6px;
+    font-size: 17px;
+}
+
+.error-summary ul {
+    margin: 0;
+}
+
+.error-summary a {
+    color: var(--error);
+}
+
+/* Spam-trap field: moved off screen so people never see it */
+.hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+    transform: none;
 }
 
 .error-message {
@@ -683,11 +730,6 @@ textarea.invalid {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-}
-
-.button:disabled {
-    opacity: 0.6;
-    cursor: wait;
 }
 
 /* ===== Footer ===== */

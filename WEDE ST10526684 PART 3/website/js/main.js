@@ -204,8 +204,11 @@ function createProductCard(product, clickableImage) {
 }
 
 // ===== Form validation helpers (used by enquiry.js and contact.js) =====
+
+// Red border + message under the field
 function showError(field, message) {
     const errorBox = document.getElementById(field.id + "-error");
+    field.classList.remove("valid");
     field.classList.add("invalid");
     field.setAttribute("aria-invalid", "true");
     if (errorBox) errorBox.textContent = message;
@@ -213,9 +216,96 @@ function showError(field, message) {
 
 function clearError(field) {
     const errorBox = document.getElementById(field.id + "-error");
-    field.classList.remove("invalid");
+    field.classList.remove("invalid", "valid");
     field.removeAttribute("aria-invalid");
     if (errorBox) errorBox.textContent = "";
+}
+
+// Green border for a correctly filled-in field (empty optional fields stay plain)
+function markValid(field) {
+    clearError(field);
+    if (field.value.trim() !== "") field.classList.add("valid");
+}
+
+// The fields a form validates - the hidden spam-trap field is left out
+function getFormFields(form) {
+    return Array.from(form.querySelectorAll(".form-row input, .form-row select, .form-row textarea"));
+}
+
+// Validates every field with the page's rule function.
+// Returns true if all are valid; otherwise shows the error summary.
+function validateForm(form, validateField) {
+    const invalidFields = getFormFields(form).filter(function (field) { return !validateField(field); });
+    if (invalidFields.length === 0) {
+        hideErrorSummary(form);
+        return true;
+    }
+    showErrorSummary(form, invalidFields);
+    return false;
+}
+
+// A box above the form listing every problem, each one a link to its field
+function showErrorSummary(form, invalidFields) {
+    let summary = document.getElementById(form.id + "-summary");
+    if (!summary) {
+        summary = document.createElement("div");
+        summary.id = form.id + "-summary";
+        summary.className = "error-summary";
+        summary.setAttribute("role", "alert");
+        summary.tabIndex = -1;
+        form.before(summary);
+    }
+    summary.innerHTML = "";
+
+    const heading = document.createElement("h3");
+    heading.textContent = invalidFields.length === 1
+        ? "Please fix 1 problem before sending:"
+        : "Please fix " + invalidFields.length + " problems before sending:";
+
+    const list = document.createElement("ul");
+    invalidFields.forEach(function (field) {
+        const label = form.querySelector('label[for="' + field.id + '"]');
+        const error = document.getElementById(field.id + "-error");
+
+        const link = document.createElement("a");
+        link.href = "#" + field.id;
+        link.textContent = label.textContent.replace(/\s*\*$/, "").replace(/\s*\(.*\)$/, "") + ": " + error.textContent;
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            field.focus();
+        });
+
+        const item = document.createElement("li");
+        item.appendChild(link);
+        list.appendChild(item);
+    });
+
+    summary.append(heading, list);
+    summary.hidden = false;
+    summary.focus();
+}
+
+function hideErrorSummary(form) {
+    const summary = document.getElementById(form.id + "-summary");
+    if (summary) summary.hidden = true;
+}
+
+// Spam protection: bots fill in the hidden "website" field and submit
+// within a second or two. People never see the field and take longer.
+const PAGE_OPENED_AT = Date.now();
+
+function looksLikeSpam(form) {
+    const trap = form.querySelector('input[name="website"]');
+    const tooFast = Date.now() - PAGE_OPENED_AT < 2000;
+    return (trap && trap.value !== "") || tooFast;
+}
+
+// Stops double submissions by disabling the button while working
+function setSubmitting(form, isSubmitting, busyText) {
+    const button = form.querySelector('button[type="submit"]');
+    if (!button.dataset.label) button.dataset.label = button.textContent;
+    button.disabled = isSubmitting;
+    button.textContent = isSubmitting ? busyText : button.dataset.label;
 }
 
 function isValidEmail(email) {
@@ -225,4 +315,14 @@ function isValidEmail(email) {
 // South African numbers: 0821234567 or +27821234567 (spaces allowed)
 function isValidSAPhone(phone) {
     return /^(\+27|0)[1-9][0-9]{8}$/.test(phone.replace(/\s/g, ""));
+}
+
+// Letters (including accents), spaces, hyphens and apostrophes only
+function isValidName(name) {
+    return /^[A-Za-zÀ-ÿ' -]+$/.test(name);
+}
+
+// True if the text contains a web link (a common sign of spam)
+function containsLink(text) {
+    return /(https?:\/\/|www\.)/i.test(text);
 }

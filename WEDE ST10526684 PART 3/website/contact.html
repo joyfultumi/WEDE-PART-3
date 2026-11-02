@@ -141,6 +141,12 @@
                     <span class="error-message" id="message-error" aria-live="polite"></span>
                 </div>
 
+                <!-- Spam trap: hidden from people, but bots fill it in. contact.js ignores any form where it isn't empty. -->
+                <div class="hp-field" aria-hidden="true">
+                    <label for="contact-website">Leave this field empty</label>
+                    <input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off">
+                </div>
+
                 <button class="button" type="submit">Send Email</button>
             </form>
 
