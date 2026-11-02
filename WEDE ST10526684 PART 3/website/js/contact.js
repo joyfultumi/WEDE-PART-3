@@ -61,21 +61,33 @@ function setUpContactForm() {
             "?subject=" + encodeURIComponent(emailSubject) +
             "&body=" + encodeURIComponent(emailBody);
 
-        // Show a confirmation with a button in case the email app did not open
+        // Open the user's email app with the compiled message
+        window.location.href = mailtoLink;
+
+        // Show a success message with a button in case the email app did not open
         responseBox.innerHTML = "";
         const heading = document.createElement("h3");
-        heading.textContent = "Thanks, " + name + "! Your email is ready.";
+        heading.textContent = "✔ Thank you, " + name + "! Your message has been sent to your email app.";
         const text = document.createElement("p");
-        text.textContent = "Your email app should open with your message to " + BAKERY_EMAIL +
-            ". Press Send in your email app to deliver it. If it did not open, use the button below.";
+        text.textContent = "Your message to " + BAKERY_EMAIL + " is ready in your email app - press Send there to deliver it. " +
+            "We reply within one working day. If your email app did not open, use the button below.";
         const link = document.createElement("a");
         link.className = "button";
-        link.href = mailtoLink;
+        link.href = mailtoLink; // still holds the message after the form is cleared
         link.textContent = "Open email again";
         responseBox.append(heading, text, link);
         responseBox.classList.add("show");
+        responseBox.scrollIntoView({ behavior: "smooth", block: "center" });
 
-        window.location.href = mailtoLink;
+        // Clear all the fields so the form is ready for a new message
+        form.reset();
+        fields.forEach(clearError);
+        counter.textContent = "0 / 1000 characters";
+    });
+
+    // Hide the success message when the user starts typing a new message
+    form.addEventListener("input", function () {
+        responseBox.classList.remove("show");
     });
 }
 

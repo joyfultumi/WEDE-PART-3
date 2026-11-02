@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Security: only allow files from this site and the trusted map library -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com https://code.jquery.com; style-src 'self' https://unpkg.com; img-src 'self' data: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- SEO: unique title and description for this page -->
@@ -103,6 +103,21 @@
             <p>We are a family bakery serving Nietgedacht, Lanseria and the surrounding areas. <a href="about.html">Read our story</a>.</p>
         </section>
 
+        <!-- Customer reviews carousel - built with jQuery in reviews.js -->
+        <section class="reveal" aria-labelledby="reviews-heading">
+            <h2 id="reviews-heading">What Our Customers Say</h2>
+            <div id="reviews-carousel" class="reviews-carousel" role="region" aria-roledescription="carousel" aria-label="Customer reviews">
+                <div class="review-slide" aria-live="polite"></div>
+                <div class="review-controls">
+                    <button type="button" class="review-prev" aria-label="Previous review">&#8249;</button>
+                    <div class="review-dots"></div>
+                    <button type="button" class="review-next" aria-label="Next review">&#8250;</button>
+                    <button type="button" class="review-pause" aria-pressed="false">Pause</button>
+                </div>
+            </div>
+            <noscript><p>Turn on JavaScript to read our customer reviews.</p></noscript>
+        </section>
+
         <section class="reveal" aria-labelledby="hours-heading">
             <h2 id="hours-heading">Opening Hours</h2>
             <table>
@@ -130,7 +145,11 @@
         <p>&copy; <span id="year">2026</span> Joyful Delights Bakery. All rights reserved.</p>
     </footer>
 
+    <!-- jQuery library (used for the reviews carousel) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous" defer></script>
     <script src="js/products-data.js" defer></script>
     <script src="js/main.js" defer></script>
+    <script src="js/reviews.js" defer></script>
 </body>
 </html>

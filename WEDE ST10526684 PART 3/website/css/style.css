@@ -215,6 +215,85 @@ td {
     border-bottom: 1px solid var(--pink-light);
 }
 
+/* ===== Reviews carousel (Home page, jQuery) ===== */
+.reviews-carousel {
+    background: var(--pink-light);
+    border-radius: var(--radius);
+    padding: 28px 24px 18px;
+    text-align: center;
+}
+
+.review-slide {
+    min-height: 170px;
+}
+
+.review-slide blockquote {
+    margin: 0 auto;
+    max-width: 640px;
+}
+
+.review-stars {
+    color: #c78a00;
+    font-size: 22px;
+    letter-spacing: 3px;
+    margin: 0;
+}
+
+.review-text {
+    font-size: 19px;
+    font-style: italic;
+    color: var(--purple-dark);
+}
+
+.review-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.review-controls button {
+    background: var(--white);
+    color: var(--purple-dark);
+    border: 2px solid var(--purple);
+    border-radius: 20px;
+    min-width: 40px;
+    height: 36px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.review-controls button:hover,
+.review-controls button:focus {
+    background: var(--purple);
+    color: var(--white);
+}
+
+.review-controls .review-pause {
+    font-size: 14px;
+    padding: 0 14px;
+}
+
+.review-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.review-controls .review-dot {
+    min-width: 0;
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    border-radius: 50%;
+    border-width: 2px;
+}
+
+.review-controls .review-dot.active {
+    background: var(--purple);
+}
+
 /* ===== Product cards ===== */
 .product-grid {
     display: grid;
