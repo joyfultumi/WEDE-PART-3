@@ -3,8 +3,8 @@
 **Student:** ST10526684
 **Module:** WEDE5020 – Web Development (Introduction)
 **POE Part:** Part 3 – Enhancing Functionality and SEO
-**Live site:** https://YOUR-USERNAME.github.io/joyful-delights-bakery/
-**Repository:** https://github.com/YOUR-USERNAME/joyful-delights-bakery
+**Live site:** https://joyful-delights-bakery.netlify.app/
+**Repository:** https://github.com/joyfultumi/WEDE-PART-3
 
 ---
 
@@ -153,12 +153,20 @@ The forms use `novalidate`, so the browser's own pop-ups are switched off and Ja
 - `robots.txt` allows crawling and points to the sitemap.
 - `sitemap.xml` lists all pages.
 - **Page speed:** compressed thumbnails (about 50 KB each instead of up to 280 KB), `loading="lazy"` on images, `width`/`height` set to avoid layout shift, scripts loaded with `defer`.
-- **Security:** Content Security Policy meta tag (only allows scripts from this site and the Leaflet library), Subresource Integrity (`integrity`) on the Leaflet files, `rel="noopener noreferrer"` on external links, user input added to the page with `textContent` (never `innerHTML`) to prevent script injection, HTTPS through GitHub Pages.
+- **Security:** Content Security Policy meta tag (only allows scripts from this site and the Leaflet library), Subresource Integrity (`integrity`) on the Leaflet files, `rel="noopener noreferrer"` on external links, user input added to the page with `textContent` (never `innerHTML`) to prevent script injection, HTTPS through Netlify.
 
 ---
 
 ## 4. How to run locally
-Open `index.html` in a browser, or in VS Code right-click `index.html` → **Open with Live Server**.
+In VS Code right-click `index.html` → **Open with Live Server**. (Opening the file by double-clicking it won't load the products, because browsers block `fetch()` for files on your computer.)
+
+### Deployment
+- **Live site:** https://joyful-delights-bakery.netlify.app/
+- **Host:** Netlify (free plan), linked to this GitHub repository.
+- **Settings:** production branch `main`; base directory `WEDE ST10526684 PART 3/website`; no build command (plain HTML, CSS and JavaScript); visibility Public.
+- **Continuous deployment:** every push to `main` is published automatically, usually within a minute.
+- `robots.txt`, `sitemap.xml`, canonical links and Open Graph tags all use the live address.
+- **Note:** Netlify's free plan injects a small "Powered by Netlify" badge script. The site's Content Security Policy blocks it, so the browser console shows CSP messages for it. They don't affect the site.
 
 ---
 
@@ -209,7 +217,8 @@ Open `index.html` in a browser, or in VS Code right-click `index.html` → **Ope
 | 2026-11-02 | robots.txt, sitemap.xml | Created both files for search engines. |
 | 2026-11-02 | images/thumbs | Created compressed thumbnails for faster loading; added lazy loading. |
 | 2026-11-02 | All pages | Security: Content Security Policy, Subresource Integrity on Leaflet, `noopener` on external links. |
-| 2026-11-02 | — | Deployed the website to GitHub Pages. |
+| 2026-11-02 | — | Deployed the website on Netlify at https://joyful-delights-bakery.netlify.app/ with automatic deploys from the `main` branch. |
+| 2026-11-02 | All pages, sitemap.xml, robots.txt, README.md | Replaced the placeholder web address with the live Netlify address in canonical links, Open Graph tags, structured data and the sitemap. `robots.txt` now points to the real `sitemap.xml` (it previously pointed to an old test site). |
 
 ---
 
@@ -217,7 +226,7 @@ Open `index.html` in a browser, or in VS Code right-click `index.html` → **Ope
 
 Formspree (2026) *Formspree documentation: AJAX submissions*. Available at: https://help.formspree.io/hc/en-us/articles/360013470814-Submit-forms-with-JavaScript-AJAX (Accessed: 2 November 2026).
 
-GitHub (2026) *Creating a GitHub Pages site*. Available at: https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site (Accessed: 2 November 2026).
+Netlify (2026) *Configure builds: base directory and publish directory*. Available at: https://docs.netlify.com/configure-builds/overview/ (Accessed: 2 November 2026).
 
 Google (2026) *SEO Starter Guide*. Google Search Central. Available at: https://developers.google.com/search/docs/fundamentals/seo-starter-guide (Accessed: 2 November 2026).
 
