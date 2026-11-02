@@ -190,7 +190,15 @@ function createProductCard(product, clickableImage) {
     price.className = "price";
     price.textContent = formatRand(product.price) + " " + product.unit;
 
-    body.append(category, title, description, price);
+    // Link to the enquiry form with this product already chosen,
+    // e.g. enquiry.html?product=red-velvet-cake
+    const enquire = document.createElement("a");
+    enquire.className = "button small";
+    enquire.href = "enquiry.html?product=" + encodeURIComponent(product.id);
+    enquire.textContent = "Enquire about this";
+    enquire.setAttribute("aria-label", "Enquire about " + product.name);
+
+    body.append(category, title, description, price, enquire);
     card.appendChild(body);
     return card;
 }

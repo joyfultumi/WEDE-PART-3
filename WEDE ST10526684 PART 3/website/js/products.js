@@ -36,6 +36,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         categorySelect.appendChild(option);
     });
 
+    // Start with any search, category or sort saved in the address,
+    // e.g. products.html?category=Cakes&sort=price-low&q=red
+    readFiltersFromAddress();
+
     // The list currently on screen - the lightbox uses this order
     let visibleProducts = [];
 
@@ -71,6 +75,35 @@ document.addEventListener("DOMContentLoaded", async function () {
         resultsCount.textContent = visibleProducts.length === 0
             ? "No products match your search. Try another word or category."
             : "Showing " + visibleProducts.length + " of " + products.length + " products";
+
+        saveFiltersToAddress();
+    }
+
+    // ----- Filters in the web address (so a filtered view can be shared or bookmarked) -----
+    function readFiltersFromAddress() {
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.has("q")) searchInput.value = params.get("q").slice(0, 50);
+
+        // Only use values that exist in the dropdowns, ignore anything else
+        if (hasOption(categorySelect, params.get("category"))) categorySelect.value = params.get("category");
+        if (hasOption(sortSelect, params.get("sort"))) sortSelect.value = params.get("sort");
+    }
+
+    function saveFiltersToAddress() {
+        const params = new URLSearchParams();
+        const searchText = searchInput.value.trim();
+        if (searchText !== "") params.set("q", searchText);
+        if (categorySelect.value !== "all") params.set("category", categorySelect.value);
+        if (sortSelect.value !== "name-az") params.set("sort", sortSelect.value);
+
+        const query = params.toString();
+        // replaceState changes the address without reloading or adding to Back history
+        history.replaceState(null, "", query ? "?" + query : window.location.pathname);
+    }
+
+    function hasOption(select, value) {
+        return Array.from(select.options).some(function (option) { return option.value === value; });
     }
 
     searchInput.addEventListener("input", renderProducts);

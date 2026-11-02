@@ -32,12 +32,34 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             placeholder.textContent = "-- Please choose --";
             productSelect.disabled = false;
+            preselectFromLink();
         } catch (error) {
             console.error(error);
             placeholder.textContent = "Products could not be loaded";
             showError(productSelect, "Our product list couldn't be loaded. Please refresh the page or phone us on 076 258 5159.");
         }
     }
+
+    // If the user came from an "Enquire about this" button the address looks
+    // like enquiry.html?product=red-velvet-cake - choose that product for them
+    function preselectFromLink() {
+        const productId = new URLSearchParams(window.location.search).get("product");
+        const product = products.find(function (p) { return p.id === productId; });
+        if (!product) return; // no product in the link, or an unknown one
+
+        productSelect.value = product.id;
+        const hint = document.getElementById("product-hint");
+        hint.textContent = "You chose " + product.name + " on our products page. You can change it here.";
+
+        const heading = document.querySelector("main h1");
+        heading.textContent = "Enquire about " + product.name;
+        document.title = "Enquire about " + product.name + " | Joyful Delights Bakery";
+    }
+
+    // Keep the hint correct if the user picks another product
+    productSelect.addEventListener("change", function () {
+        document.getElementById("product-hint").textContent = "";
+    });
 
     // Earliest date that can be picked = today + notice days
     dateInput.min = toInputDate(addDays(new Date(), NOTICE_DAYS));
