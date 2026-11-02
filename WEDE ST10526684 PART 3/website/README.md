@@ -170,7 +170,149 @@ In VS Code right-click `index.html` → **Open with Live Server**. (Opening the 
 
 ---
 
-## 5. Changelog
+## 5. Part 3 requirements checklist
+
+Every requirement in the Part 3 brief, and where it is met. File paths are relative to this `website` folder.
+
+### 1. Working through feedback from Part 2
+| Requirement | Where it is met |
+|---|---|
+| Implement corrections from Part 2 | See **Changelog → Part 3 – fixes based on Part 2 feedback** (section 7) |
+| Record every edit in the changelog with enough detail | Section 7 lists each change with date, files and what changed |
+
+### 2. Functionality – JavaScript enhancements
+| Requirement | Feature | Files |
+|---|---|---|
+| 2.1 Accordions, tabs or modals (jQuery or another framework) | **Tabs** (Story / Mission / Vision) and **FAQ accordion** on About; **lightbox modal** on Products; **reviews carousel built with jQuery 3.7.1** on Home | `about.html`, `products.html`, `index.html`, `js/main.js`, `js/products.js`, `js/reviews.js` |
+| 2.1 Interactive map (Leaflet, Mapbox, OpenLayers or Google Maps) | **Leaflet + OpenStreetMap** map with bakery marker and two delivery-zone circles | `contact.html`, `js/contact.js` |
+| 2.1 Location-based features | **Delivery checker** using device location (Geolocation API), suburb search (Nominatim) or a map click; Haversine distance; free / R50 / collection result; **Get directions** link from the customer's location | `js/contact.js` |
+| 2.1 Animations and transitions (CSS and JavaScript) | CSS `@keyframes` hero fade-in and loading pulse; transitions on cards, buttons, nav, accordion and lightbox; JavaScript scroll-reveal (`IntersectionObserver`); jQuery `fadeIn`/`fadeOut` carousel; reduced-motion support | `css/style.css`, `js/main.js`, `js/reviews.js` |
+| 2.1 Advanced DOM manipulation | Product cards, dropdown options, delivery results, quotes and error summaries built with `createElement`/`textContent`/`append`; back-to-top button created by JavaScript; event delegation on the product grid; page heading and title changed from the URL | `js/main.js`, `js/products.js`, `js/enquiry.js`, `js/contact.js` |
+| 2.1 Gallery with a lightbox | Click any product photo: full-size image, caption with price, previous/next, arrow keys, Esc, click outside to close | `products.html`, `js/products.js` |
+| 2.2 Dynamically load content | Products loaded from **`products.json` with `fetch()`** (`async`/`await`), with loading and error states | `products.json`, `js/products-data.js` |
+| 2.2 Search, filter and sort | Live search, category filter and sort by name/price; filters saved in the URL (`?category=Cakes&sort=price-low`) | `products.html`, `js/products.js` |
+
+### 3. Search Engine Optimisation
+| Requirement | How it is met |
+|---|---|
+| 3.1 Keyword research | Keywords chosen for a local bakery (*bakery Nietgedacht, custom cakes, birthday cakes, cupcakes, muffins, scones, Gauteng bakery*) and used in titles, descriptions, headings and body text |
+| 3.1 Title tags and meta descriptions | Unique `<title>` and `<meta name="description">` on all 5 pages |
+| 3.1 Header tags | One `<h1>` per page, then `<h2>`/`<h3>` in order |
+| 3.1 Image optimisation | Descriptive file names (e.g. `mothers-day-cakes.jpeg`), `alt` text on every image, compressed thumbnails, `loading="lazy"`, `width`/`height` set |
+| 3.1 URL structure | Short, descriptive URLs (`/products.html`, `/enquiry.html`); readable filter URLs |
+| 3.1 Internal linking | Navigation, footer links, in-text links between pages, product cards link to the enquiry form, Home links to the Cakes category |
+| 3.1 Mobile-friendliness | Responsive layout, viewport meta tag, media queries, hamburger menu; Lighthouse Accessibility 100 on mobile |
+| 3.2 Backlinks | Open Graph tags so shared links show a title, description and image. (Real backlinks come from other websites, e.g. listing the bakery on Google Business Profile and local directories, which is done outside the code.) |
+| 3.2 Social media | Footer links to Facebook, Instagram and TikTok; Open Graph preview tags |
+| 3.2 Local SEO | schema.org `Bakery` structured data (address, phone, hours, location) on Home and Contact; address on every page; interactive map; Google Rich Results test passes (section 6) |
+| 3.3 robots.txt | `robots.txt` allows crawling and links to the sitemap |
+| 3.3 sitemap.xml | `sitemap.xml` lists all 5 pages with priorities |
+| 3.3 Page speed | Thumbnails (40–80 KB instead of up to 290 KB), lazy loading, `defer` scripts, jQuery only on Home; Lighthouse Performance 97 mobile / 100 desktop (section 6) |
+| 3.3 Security | Content Security Policy, Subresource Integrity on jQuery and Leaflet, HTTPS with HSTS from Netlify, `rel="noopener noreferrer"`, `textContent` for all user and API data, URL parameters checked against known values, honeypot spam protection |
+
+### 4. Form functionality and validation
+| Requirement | How it is met |
+|---|---|
+| 4.1 Enquiry form with a processed response | `enquiry.html`: after validation the customer gets an estimate (price × quantity, bulk discount) and availability |
+| 4.1 Contact form compiled into an email | `contact.html`: details compiled into an email to `info@joyfuldelightsbakery.com`, the user's email app opens, and the form clears |
+| Form elements | `input` (text, email, tel, number, date, search), `select`, `textarea`, `label`s for every field |
+| HTML5 validation attributes | `required`, `type`, `min`, `max`, `minlength`, `maxlength`, `pattern`, `step` |
+| `action` attribute | Enquiry → Formspree URL; Contact → `mailto:` |
+| Client-side validation | Rule tables in section 3.4; live checking; conditional rules |
+| Error handling | Message under each field, red/green borders, error summary with links, friendly messages for network errors |
+| AJAX submission | Enquiry form posted with `fetch()` without reloading the page; button disabled while sending |
+
+### 5. GitHub repository and submission
+| Requirement | How it is met |
+|---|---|
+| Regular commits with descriptive messages | One commit per feature (see the repository's commit history) |
+| README updated with Part 3 information, changelog and references | This file: sections 3–8 |
+| Push to remote repository | https://github.com/joyfultumi/WEDE-PART-3 |
+| Deploy on a free platform | Netlify: https://joyful-delights-bakery.netlify.app/ |
+
+---
+
+## 6. Testing evidence
+
+Tested on 2 November 2026.
+
+### Automated tests
+| Test | Tool | Result |
+|---|---|---|
+| HTML validity, all 5 pages | W3C Nu HTML Checker (https://validator.w3.org/nu/) | **0 errors** on every page. The only notes are about the Content Security Policy, which the checker can't apply to an uploaded file. (Checking the live URL stops early because Netlify adds its badge script after `</html>`, so the source files were checked directly.) |
+| CSS validity | W3C CSS Validator (https://jigsaw.w3.org/css-validator/) | **No errors** – "This document validates as CSS level 3 + SVG" |
+| Lighthouse – mobile | PageSpeed Insights | **Performance 97 · Accessibility 100 · Best Practices 92 · SEO 100** (FCP 0.9 s, LCP 1.8 s, TBT 0 ms, CLS 0) |
+| Lighthouse – desktop | PageSpeed Insights | **Performance 100 · Accessibility 100 · Best Practices 92 · SEO 100** |
+| Structured data | Google Rich Results Test | **2 valid items**: Local business and Organization |
+
+Best Practices is 92 rather than 100 only because of the console messages from Netlify's injected badge being blocked by the site's security policy.
+
+Report links: [Mobile](https://pagespeed.web.dev/analysis/https-joyful-delights-bakery-netlify-app/vqdjp2twqs?form_factor=mobile) · [Desktop](https://pagespeed.web.dev/analysis/https-joyful-delights-bakery-netlify-app/nwgexuxipk?form_factor=desktop) · [Rich Results](https://search.google.com/test/rich-results/result?id=-vAw8pRZVtLdcNn1GQ-3IA)
+
+### Manual tests
+| Feature | Test | Result |
+|---|---|---|
+| Products from JSON | Opened Products; renamed `products.json` | 10 products load; with the file missing, a friendly error appears and the search controls stay disabled |
+| Search / filter / sort | Searched "scone"; opened `?category=Cakes&sort=price-low` | 2 scones shown; 3 cakes, cheapest first; URL updates as filters change |
+| Lightbox | Clicked a photo; used ← → and Esc | Full-size image, caption and price; previous/next and Esc work |
+| Enquire button | Clicked "Enquire about this" on Red Velvet Cake | Enquiry form opens with Red Velvet Cake selected and heading "Enquire about Red Velvet Cake"; a fake `?product=<script>` is ignored |
+| Enquiry validation | Empty submit; bulk order of 10; a Sunday; a date 8 months ahead; catering in 3 days; custom cake with no description | Summary lists 6 problems; each rule shows its message |
+| Enquiry estimate | 30 cupcakes, bulk order | R450.00 − R45.00 discount = **R405.00**, date shown as available |
+| Spam protection | Filled the hidden honeypot field | Submission ignored |
+| Contact validation | Empty submit; complaint without phone; ALL CAPS subject; link in message | Every rule shows its message; phone label changes for complaints |
+| Contact email | Valid message | Email compiled with subject `[Compliment] …`, success message shown, all fields cleared |
+| Delivery checker | Searched "Lanseria", "Hatfield, Pretoria"; clicked the map; simulated device location | 4.0 km free; 36.1 km outside the area; 10.5 km R50; blocked location shows a helpful message |
+| Reviews carousel | Next, previous, dots, Pause | Reviews fade correctly; Pause stops autoplay |
+| Mobile | 375 px wide | Hamburger menu works, no sideways scrolling |
+
+### Screenshots
+All screenshots were taken of the live site and the test tools on 2 November 2026. They are in the `screenshots` folder.
+
+#### Test results
+**Lighthouse – mobile** (Performance 97, Accessibility 100, Best Practices 92, SEO 100)
+
+![Lighthouse mobile scores](screenshots/lighthouse-mobile.png)
+
+**Lighthouse – desktop** (Performance 100, Accessibility 100, Best Practices 92, SEO 100)
+
+![Lighthouse desktop scores](screenshots/lighthouse-desktop.png)
+
+**Google Rich Results Test** – 2 valid items (Local business, Organization)
+
+![Rich Results Test showing 2 valid items](screenshots/rich-results.png)
+
+**W3C HTML Checker** – `index.html`: no errors; the 7 warnings are the Content Security Policy notes explained above
+
+![W3C Nu HTML Checker result for index.html](screenshots/w3c-html-index.png)
+
+**W3C CSS Validator** – "Congratulations! No Error Found."
+
+![W3C CSS Validator result](screenshots/w3c-css.png)
+
+#### The live website
+**Home page (desktop)**
+
+![Home page on desktop](screenshots/home-desktop.png)
+
+**Products page** – product cards loaded from `products.json`, with search, category filter, sort and "Enquire about this" buttons
+
+![Products page on desktop](screenshots/products-desktop.png)
+
+**Enquiry form**
+
+![Enquiry form on desktop](screenshots/enquiry-desktop.png)
+
+**Contact page** – contact form, delivery checker and Leaflet map with delivery zones
+
+![Contact page with map on desktop](screenshots/contact-desktop.png)
+
+**Mobile view (390 px wide)** – Home, Products and Contact, showing the hamburger menu and single-column layout
+
+![Home, Products and Contact pages at phone width](screenshots/mobile-views.png)
+
+---
+
+## 7. Changelog
 
 ### Part 3 – fixes based on Part 2 feedback
 | Date | File(s) | Change |
@@ -217,12 +359,15 @@ In VS Code right-click `index.html` → **Open with Live Server**. (Opening the 
 | 2026-11-02 | robots.txt, sitemap.xml | Created both files for search engines. |
 | 2026-11-02 | images/thumbs | Created compressed thumbnails for faster loading; added lazy loading. |
 | 2026-11-02 | All pages | Security: Content Security Policy, Subresource Integrity on Leaflet, `noopener` on external links. |
+| 2026-11-02 | screenshots/, README.md | Added 10 screenshots as evidence: Lighthouse mobile and desktop, Rich Results, W3C HTML and CSS results, the Home, Products, Enquiry and Contact pages on desktop, and three pages at phone width. Shown in the Testing evidence section. |
+| 2026-11-02 | README.md | Added a Part 3 requirements checklist (every brief requirement mapped to its feature and files) and a Testing evidence section (W3C HTML and CSS validation, Lighthouse mobile and desktop scores, Rich Results test, manual test table). |
+| 2026-11-02 | enquiry.html, contact.html, css/style.css, index.html | Fixes from validation: the estimate and contact success boxes changed from `<section>` to `<div>` (sections need headings); deprecated CSS `clip` replaced with `clip-path`; `servesCuisine` added to the bakery structured data as Google's Rich Results test suggested. |
 | 2026-11-02 | — | Deployed the website on Netlify at https://joyful-delights-bakery.netlify.app/ with automatic deploys from the `main` branch. |
 | 2026-11-02 | All pages, sitemap.xml, robots.txt, README.md | Replaced the placeholder web address with the live Netlify address in canonical links, Open Graph tags, structured data and the sitemap. `robots.txt` now points to the real `sitemap.xml` (it previously pointed to an old test site). |
 
 ---
 
-## 6. References
+## 8. References
 
 Formspree (2026) *Formspree documentation: AJAX submissions*. Available at: https://help.formspree.io/hc/en-us/articles/360013470814-Submit-forms-with-JavaScript-AJAX (Accessed: 2 November 2026).
 
